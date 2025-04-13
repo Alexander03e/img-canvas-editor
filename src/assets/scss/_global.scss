@@ -1,0 +1,31 @@
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+html[data-no-scroll],
+html[data-no-scroll] body {
+    overflow: hidden !important;
+}
+
+main {
+    width: 100%;
+    padding-top: var(--header-height);
+
+    overflow: hidden;
+}
+
+// INPUT AUTOFILL FIX
+input, textarea {
+    &:-webkit-autofill {
+        &, &:focus, &:active, &:hover {
+            color: inherit !important;
+
+            background-color: initial !important;
+            background-image: none !important;
+            box-shadow: none !important;
+
+            transition: background-color 99999s ease-in-out 0s !important;
+        }
+    }
+}
