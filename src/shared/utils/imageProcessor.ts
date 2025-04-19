@@ -15,10 +15,15 @@ export abstract class ImageProcessor {
 export class StandardImageProcessor extends ImageProcessor {
     async getImageInfo(): Promise<IImageInfo> {
         const img = await this.createImageElement();
+        const imageData = await this.getImageData();
+        const bytesPerPixel = imageData.data.length / (imageData.width * imageData.height);
+        
+        const colorDepth = bytesPerPixel * 8;
+
         return {
             width: String(img.width),
             height: String(img.height),
-            colorDepth: '32', // RGBA
+            colorDepth: String(colorDepth),
             format: this.blob.type,
         };
     }
