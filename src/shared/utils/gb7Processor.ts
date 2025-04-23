@@ -32,16 +32,13 @@ export class GB7ImageProcessor extends ImageProcessor {
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
                 const pixel = dataView.getUint8(offset++);
-                const grayValue = (pixel & 0x7f) << 1; // Scale 7-bit to 8-bit
+                // const grayValue = (pixel & 0x7f) << 1; для расширения диапазона в 2 раза сдвиг на 1 бит влево
+                const grayValue = (pixel & 0x7f) << 0; // диапазон не расширяется, поэтому пиксели остаются серыми
                 const isMasked = this.hasMask && (pixel & 0x80) === 0;
 
                 const idx = (y * this.width + x) * 4;
 
-                if (isMasked) {
-                    pixelData.set([0, 0, 0, 0], idx);
-                } else {
-                    pixelData.set([grayValue, grayValue, grayValue, 255], idx);
-                }
+                pixelData.set([grayValue, grayValue, grayValue, isMasked ? 0 : 255], idx);
             }
         }
 
@@ -52,7 +49,7 @@ export class GB7ImageProcessor extends ImageProcessor {
         if (this.width && this.height) return;
 
         const buffer = dataView ?? new DataView(await this.blob.arrayBuffer());
-        
+
         const signature = [
             buffer.getUint8(0),
             buffer.getUint8(1),
